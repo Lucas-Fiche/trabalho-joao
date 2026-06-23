@@ -158,8 +158,9 @@ const STORAGE_KEY = "validacao_idcgt_ap_39_respostas_v1";
 const DRAFT_KEY = "validacao_idcgt_ap_39_rascunho_v1";
 // E-mail do administrador que recebe as respostas e tem acesso aos resultados.
 const ADMIN_EMAIL = "jploliveira19@gmail.com";
-// Senha de acesso à área do administrador. Para alterar, edite o valor abaixo.
-const ADMIN_PASSWORD = "admin2026";
+// A senha do administrador NÃO fica no código. Ela é validada pelo Apps
+// Script, que a lê de "Propriedades do script" (ADMIN_PASSWORD) — ver
+// instruções em apps-script.gs.
 // URL do Web App do Google Apps Script (base de dados em Google Sheets).
 // Cole aqui a URL gerada ao publicar o Apps Script (ver instruções no arquivo apps-script.gs).
 const SHEETS_URL = "COLE_AQUI_A_URL_DO_GOOGLE_APPS_SCRIPT";
@@ -214,10 +215,15 @@ function applyAdminUI() {
   document.getElementById("tab-logout").style.display = on ? "" : "none";
 }
 function adminLogin() {
+  if(!sheetsConfigured()){ alert("A base de dados do Google Sheets ainda não foi configurada (constante SHEETS_URL no código), portanto a senha do administrador não pode ser validada."); return; }
   const pwd = prompt("Área restrita ao administrador.\nDigite a senha de acesso:");
   if(pwd === null) return;
-  if(pwd === ADMIN_PASSWORD){ sessionStorage.setItem("idcgt_admin","1"); applyAdminUI(); showTab('panel'); }
-  else alert("Senha incorreta.");
+  const url = SHEETS_URL + "?action=checkPassword&password=" + encodeURIComponent(pwd);
+  jsonpFetch(url, function(err, data){
+    if(err || !data){ alert("Não foi possível validar a senha agora. Verifique a conexão e tente novamente."); return; }
+    if(data.ok){ sessionStorage.setItem("idcgt_admin","1"); applyAdminUI(); showTab('panel'); }
+    else alert("Senha incorreta.");
+  });
 }
 function adminLogout() { sessionStorage.removeItem("idcgt_admin"); applyAdminUI(); showTab('form'); }
 function setView(v) {

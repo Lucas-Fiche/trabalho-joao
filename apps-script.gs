@@ -39,6 +39,16 @@ function doPost(e) {
 }
 
 function doGet(e) {
+  var params = (e && e.parameter) || {};
+  var callback = params.callback;
+
+  // Ação de login: verifica a senha do administrador (armazenada nas
+  // Propriedades do Script, fora do código e fora do HTML).
+  if (params.action === 'checkPassword') {
+    var ok = checkAdminPassword(params.password || '');
+    return respond({ ok: ok }, callback);
+  }
+
   var sheet = getSheet();
   var values = sheet.getDataRange().getValues();
   var responses = [];
@@ -49,8 +59,20 @@ function doGet(e) {
       try { responses.push(JSON.parse(raw)); } catch (ignore) {}
     }
   }
-  var payload = JSON.stringify(responses);
-  var callback = e && e.parameter && e.parameter.callback;
+  return respond(responses, callback);
+}
+
+// Compara a senha informada com a propriedade ADMIN_PASSWORD do script.
+// Configurar em: Editor do Apps Script > ⚙️ Configurações do projeto >
+// Propriedades do script > Adicionar propriedade do script.
+function checkAdminPassword(password) {
+  var stored = PropertiesService.getScriptProperties().getProperty('ADMIN_PASSWORD');
+  if (!stored) return false; // sem senha configurada, acesso bloqueado por padrão
+  return password === stored;
+}
+
+function respond(obj, callback) {
+  var payload = JSON.stringify(obj);
   if (callback) {
     // Resposta JSONP (usada pelo painel do administrador).
     return ContentService
@@ -101,7 +123,18 @@ function jsonOutput(obj) {
  *    https://script.google.com/macros/s/AKfy.../exec).
  * 7. Cole essa URL na constante SHEETS_URL no arquivo index.html.
  *
+ * 8. Configure a SENHA do administrador (fora do código e fora do HTML):
+ *    a) No editor do Apps Script, clique no ícone de engrenagem
+ *       "Configurações do projeto" (Project Settings), no menu lateral.
+ *    b) Role até "Propriedades do script" (Script properties) e clique em
+ *       "Adicionar propriedade do script" (Add script property).
+ *    c) Propriedade: ADMIN_PASSWORD   |   Valor: a senha escolhida.
+ *    d) Clique em "Salvar propriedades do script".
+ *    e) Para trocar a senha depois, edite essa mesma propriedade — não é
+ *       necessário alterar o código nem o HTML.
+ *
  * IMPORTANTE: a cada vez que você ALTERAR este código, faça
  * "Implantar > Gerenciar implantações > (editar) > Nova versão" para
- * publicar a atualização (a URL permanece a mesma).
+ * publicar a atualização (a URL permanece a mesma). A alteração da
+ * Propriedade do Script (senha) NÃO exige nova implantação.
  * ------------------------------------------------------------------ */
