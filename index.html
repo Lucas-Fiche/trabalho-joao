@@ -112,6 +112,7 @@ th,td{padding:10px;border-bottom:1px solid var(--border);text-align:left;font-si
       <select id="specialistSelect" onchange="refreshTables()"></select>
     </div>
     <div class="actions">
+      <button onclick="syncFromSheets(false)">Sincronizar com Google Sheets</button>
       <button onclick="exportSummaryCSV()">Exportar resumo CSV</button>
       <button onclick="window.print()">Imprimir relatório</button>
     </div>
@@ -121,8 +122,9 @@ th,td{padding:10px;border-bottom:1px solid var(--border);text-align:left;font-si
 
   <section id="data-section" class="card hidden">
     <h2>Dados coletados</h2>
-    <p class="small">A cada envio, a resposta é encaminhada por e-mail ao administrador (<strong id="adminEmailNote"></strong>) e armazenada neste navegador (localStorage) para consulta posterior. Use os botões de exportação/importação para consolidar respostas coletadas em diferentes dispositivos.</p>
+    <p class="small">A cada envio, a resposta é gravada na base central no <strong>Google Sheets</strong>, encaminhada por e-mail ao administrador (<strong id="adminEmailNote"></strong>) e mantida em cache neste navegador. Use <strong>Sincronizar com Google Sheets</strong> para carregar, em qualquer dispositivo, todas as respostas recebidas.</p>
     <div class="actions">
+      <button onclick="syncFromSheets(false)">Sincronizar com Google Sheets</button>
       <button onclick="exportResponsesCSV()">Exportar respostas completas CSV</button>
       <button class="secondary" onclick="exportJSON()">Exportar backup JSON</button>
       <button class="warning" onclick="document.getElementById('importFile').click()">Importar backup JSON</button>
@@ -158,7 +160,39 @@ const DRAFT_KEY = "validacao_idcgt_ap_39_rascunho_v1";
 const ADMIN_EMAIL = "jploliveira19@gmail.com";
 // Senha de acesso à área do administrador. Para alterar, edite o valor abaixo.
 const ADMIN_PASSWORD = "admin2026";
+// URL do Web App do Google Apps Script (base de dados em Google Sheets).
+// Cole aqui a URL gerada ao publicar o Apps Script (ver instruções no arquivo apps-script.gs).
+const SHEETS_URL = "COLE_AQUI_A_URL_DO_GOOGLE_APPS_SCRIPT";
 let currentView = "cumulative";
+function sheetsConfigured(){ return SHEETS_URL && SHEETS_URL.indexOf("COLE_AQUI") < 0; }
+// Grava a resposta na planilha do Google Sheets (text/plain evita o preflight CORS).
+function sendToSheets(data) {
+  if(!sheetsConfigured()) return;
+  fetch(SHEETS_URL, { method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify(data) })
+    .catch(() => { /* gravação remota indisponível; resposta permanece salva localmente */ });
+}
+// Lê via JSONP para evitar problemas de CORS na leitura do Apps Script.
+function jsonpFetch(url, cb) {
+  const name = "__jsonp_cb_" + Date.now() + "_" + Math.floor(Math.random()*1e6);
+  const script = document.createElement("script");
+  let done = false;
+  function cleanup(){ delete window[name]; if(script.parentNode) script.parentNode.removeChild(script); }
+  window[name] = function(data){ done = true; cb(null, data); cleanup(); };
+  script.onerror = function(){ if(!done){ cb(new Error("Falha ao carregar")); cleanup(); } };
+  script.src = url + (url.indexOf("?")>=0?"&":"?") + "callback=" + name;
+  document.body.appendChild(script);
+  setTimeout(function(){ if(!done){ cb(new Error("Tempo esgotado")); cleanup(); } }, 15000);
+}
+// Sincroniza o painel do administrador com todas as respostas da planilha.
+function syncFromSheets(silent) {
+  if(!sheetsConfigured()){ if(!silent) alert("A base de dados do Google Sheets ainda não foi configurada (constante SHEETS_URL no código)."); return; }
+  jsonpFetch(SHEETS_URL, function(err, data){
+    if(err || !Array.isArray(data)){ if(!silent) alert("Não foi possível sincronizar com o Google Sheets. Verifique a URL e a publicação do Apps Script."); return; }
+    setResponses(data);
+    refreshTables();
+    if(!silent) alert("Sincronizado com sucesso: " + data.length + " resposta(s) carregada(s) do Google Sheets.");
+  });
+}
 function escapeHtml(v) { return String(v ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
 function slug(s){return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]/g,'_').toLowerCase()}
 function showTab(tab,e) {
@@ -168,6 +202,7 @@ function showTab(tab,e) {
   document.querySelectorAll('.tabs .tab').forEach(b=>b.classList.remove('active'));
   const btn = document.getElementById('tab-'+tab); if(btn) btn.classList.add('active');
   refreshTables();
+  if((tab==='panel'||tab==='data') && isAdmin()) syncFromSheets(true);
 }
 // ---- Controle de acesso do administrador ----
 function isAdmin(){ return sessionStorage.getItem("idcgt_admin")==="1"; }
@@ -241,6 +276,7 @@ function submitResponse() {
     const all = getResponses(); all.push(data); setResponses(all);
     localStorage.removeItem(DRAFT_KEY);
     refreshTables();
+    sendToSheets(data);
     sendToAdmin(data);
     alert("Resposta enviada com sucesso! Obrigado pela sua participação.\n\nSuas respostas foram registradas e encaminhadas ao administrador da pesquisa. Os resultados são de uso exclusivo do administrador.");
     resetForm(false);
