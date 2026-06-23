@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Validação por Especialistas - IDCGT-AP</title>
+<style>
+:root{--primary:#1e40af;--secondary:#3b82f6;--dark:#0f172a;--muted:#64748b;--bg:#f1f5f9;--card:#fff;--border:#e2e8f0;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;--soft:#eff6ff;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Segoe UI,Tahoma,sans-serif;background:var(--bg);color:var(--dark);line-height:1.55}
+header{background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;padding:32px 20px 56px;text-align:center}
+header h1{font-size:clamp(1.45rem,3vw,2.4rem);margin-bottom:8px} header p{opacity:.95;max-width:1050px;margin:auto}
+.container{max-width:1240px;margin:-32px auto 40px;padding:0 18px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 10px 24px rgba(15,23,42,.08);padding:22px;margin-bottom:18px}
+h2{font-size:1.25rem;color:var(--primary);margin-bottom:14px} h3{font-size:1.05rem;margin:18px 0 10px;color:#1e3a8a}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+label{font-weight:600;font-size:.9rem;color:#334155;display:block;margin-bottom:6px}
+input,select,textarea{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:10px;font-size:.95rem;background:white}
+textarea{min-height:86px;resize:vertical} .small{font-size:.82rem;color:var(--muted)} .required{color:var(--danger)}
+.notice{background:#f8fafc;border-left:4px solid var(--primary);padding:14px;border-radius:10px;margin:12px 0}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:8px}
+.scale label{border:1px solid var(--border);border-radius:10px;padding:8px;text-align:center;background:#fff;cursor:pointer;font-weight:500}
+.scale input{width:auto;margin-right:4px}
+.item-card{border:1px solid var(--border);border-radius:14px;padding:18px;margin:14px 0;background:#fff}
+.item-head{border-bottom:1px dashed var(--border);padding-bottom:10px;margin-bottom:14px}
+.badge{display:inline-block;background:var(--soft);color:var(--primary);border-radius:999px;padding:4px 10px;font-size:.78rem;font-weight:700;white-space:nowrap}
+.criteria{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:14px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+button{border:0;border-radius:10px;padding:11px 15px;font-weight:700;cursor:pointer;background:var(--primary);color:#fff}
+button.secondary{background:#475569} button.success{background:var(--success)} button.warning{background:var(--warning)} button.danger{background:var(--danger)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:10px 0 18px}
+.kpi{background:#f8fafc;border:1px solid var(--border);border-radius:14px;padding:16px} .kpi .num{font-size:1.8rem;color:var(--primary);font-weight:800}
+.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:12px} table{width:100%;border-collapse:collapse;background:white;min-width:900px}
+th,td{padding:10px;border-bottom:1px solid var(--border);text-align:left;font-size:.88rem;vertical-align:top} th{background:#f8fafc;color:#334155;position:sticky;top:0;z-index:1}
+.status{border-radius:999px;padding:4px 8px;font-weight:800;font-size:.76rem;display:inline-block} .manter{background:#dcfce7;color:#166534}.revisar{background:#fef3c7;color:#92400e}.excluir{background:#fee2e2;color:#991b1b}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px} .tab{background:#e2e8f0;color:#334155}.tab.active{background:var(--primary);color:white}
+.hidden{display:none} .footer-note{text-align:center;color:var(--muted);font-size:.8rem;margin-top:18px}
+@media print{.actions,.tabs,#form-section{display:none!important}.container{margin:0;max-width:100%}.card{box-shadow:none;break-inside:avoid}header{padding:20px;color:#000;background:white}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Formulário de Validação por Especialistas</h1>
+  <p>Instrumento de Diagnóstico de Competências Gerenciais e Transversais na Administração Pública (IDCGT-AP) | Avaliação de conteúdo, CVC, consenso e decisão por item.</p>
+</header>
+<main class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('form',event)">Formulário</button>
+    <button class="tab" onclick="showTab('panel',event)">Painel de Resultados</button>
+    <button class="tab" onclick="showTab('data',event)">Dados Coletados</button>
+    <button class="tab" onclick="showTab('help',event)">Instruções</button>
+  </div>
+
+  <section id="form-section" class="card">
+    <h2>1. Apresentação e consentimento</h2>
+    <div class="notice">
+      <p>Este formulário tem por objetivo validar, por especialistas, os itens do <strong>IDCGT-AP</strong>, desenvolvido para diagnosticar competências gerenciais e transversais na Administração Pública.</p>
+      <p class="small">Escala de julgamento dos especialistas: 1 = inadequado/muito baixo; 2 = baixo; 3 = regular; 4 = adequado; 5 = muito adequado. Para consenso, consideram-se notas iguais ou superiores a 4.</p>
+    </div>
+    <label><input type="checkbox" id="consent" style="width:auto;margin-right:8px"> Declaro que li as informações e aceito participar da validação.</label>
+
+    <h2 style="margin-top:22px">2. Identificação do especialista</h2>
+    <div class="grid">
+      <div><label>Nome</label><input id="nome" placeholder="Opcional"></div>
+      <div><label>E-mail</label><input id="email" type="email" placeholder="Opcional"></div>
+      <div><label>Formação acadêmica <span class="required">*</span></label><input id="formacao" required></div>
+      <div><label>Área de formação <span class="required">*</span></label><input id="areaFormacao" required></div>
+      <div><label>Área de atuação <span class="required">*</span></label><input id="areaAtuacao" required></div>
+      <div><label>Experiência profissional</label><select id="expProf"><option>Até 5 anos</option><option>6 a 10 anos</option><option>11 a 15 anos</option><option>Acima de 15 anos</option></select></div>
+      <div><label>Experiência em gestão pública</label><select id="expGestao"><option>Não possui</option><option>Até 5 anos</option><option>6 a 10 anos</option><option>Acima de 10 anos</option></select></div>
+      <div><label>Experiência com gestão por competências</label><select id="expCompetencias"><option>Não possui</option><option>Baixa</option><option>Moderada</option><option>Alta</option></select></div>
+      <div><label>Experiência com validação de instrumentos</label><select id="expValidacao"><option>Não possui</option><option>Baixa</option><option>Moderada</option><option>Alta</option></select></div>
+      <div><label>Conhecimento sobre gestão por competências</label><select id="conhecimento"><option>Baixo</option><option>Moderado</option><option>Alto</option><option>Muito alto</option></select></div>
+      <div><label>Capacidade para julgar o instrumento</label><select id="capacidade"><option>Parcial</option><option>Adequada</option><option>Elevada</option></select></div>
+    </div>
+
+    <h2 style="margin-top:22px">3. Avaliação dos 39 itens do instrumento</h2>
+    <div id="items"></div>
+
+    <h2 style="margin-top:22px">4. Avaliação global</h2>
+    <div class="grid">
+      <div><label>O instrumento representa adequadamente o construto?</label><select id="globalRepresenta"><option>Sim</option><option>Parcialmente</option><option>Não</option></select></div>
+      <div><label>Itens a excluir/reformular</label><textarea id="globalExcluir"></textarea></div>
+      <div><label>Competências ou temas não contemplados</label><textarea id="globalTemas"></textarea></div>
+      <div><label>Sugestões gerais</label><textarea id="globalSugestoes"></textarea></div>
+    </div>
+    <div class="actions">
+      <button class="success" onclick="submitResponse()">Enviar e tabular resposta</button>
+      <button class="secondary" onclick="saveDraft()">Salvar rascunho</button>
+      <button class="warning" onclick="loadDraft()">Carregar rascunho</button>
+      <button class="danger" onclick="resetForm()">Limpar formulário</button>
+    </div>
+  </section>
+
+  <section id="panel-section" class="card hidden">
+    <h2>Painel de Resultados</h2>
+    <div class="kpis">
+      <div class="kpi"><div class="small">Total de especialistas</div><div class="num" id="kJudges">0</div></div>
+      <div class="kpi"><div class="small">Itens avaliados</div><div class="num">39</div></div>
+      <div class="kpi"><div class="small">Itens manter</div><div class="num" id="kManter">0</div></div>
+      <div class="kpi"><div class="small">Itens revisar</div><div class="num" id="kRevisar">0</div></div>
+      <div class="kpi"><div class="small">Excluir/reformular</div><div class="num" id="kExcluir">0</div></div>
+    </div>
+    <div class="actions">
+      <button onclick="exportSummaryCSV()">Exportar resumo CSV</button>
+      <button onclick="window.print()">Imprimir relatório</button>
+    </div>
+    <div class="table-wrap"><table id="summaryTable"></table></div>
+  </section>
+
+  <section id="data-section" class="card hidden">
+    <h2>Dados coletados</h2>
+    <p class="small">Os dados ficam salvos neste navegador por localStorage. Para coleta real online, será necessário hospedar e integrar com Google Sheets/Apps Script, Firebase ou backend.</p>
+    <div class="actions">
+      <button onclick="exportResponsesCSV()">Exportar respostas completas CSV</button>
+      <button class="secondary" onclick="exportJSON()">Exportar backup JSON</button>
+      <button class="warning" onclick="document.getElementById('importFile').click()">Importar backup JSON</button>
+      <input type="file" id="importFile" accept=".json" class="hidden" onchange="importJSON(event)">
+      <button class="danger" onclick="clearAll()">Limpar todos os dados</button>
+    </div>
+    <div class="table-wrap"><table id="responsesTable"></table></div>
+  </section>
+
+  <section id="help-section" class="card hidden">
+    <h2>Instruções de uso</h2>
+    <div class="notice">
+      <p><strong>1.</strong> Cada especialista deve atribuir notas de 1 a 5 para Clareza, Pertinência, Relevância e Representatividade.</p>
+      <p><strong>2.</strong> O sistema calcula CVC inicial, erro, CVC final, consenso e decisão por item.</p>
+      <p><strong>3.</strong> CVC final: Manter se ≥ 0,80; Revisar se 0,70 a 0,79; Excluir/Reformular se &lt; 0,70.</p>
+      <p><strong>4.</strong> Os dados podem ser exportados em CSV para análise em Excel, JASP, SPSS ou Power BI.</p>
+    </div>
+  </section>
+  <p class="footer-note">Arquivo único HTML/CSS/JavaScript. Sistema de validação por especialistas do IDCGT-AP.</p>
+</main>
+
+<script>
+const ITEMS = [{"id": "Q01", "section": "Seção A – Perfil funcional e sociodemográfico", "type": "Múltipla escolha", "question": "Gênero", "options": "Masculino | Feminino | Outro | Prefiro não informar", "dimension": "Perfil funcional e sociodemográfico"}, {"id": "Q02", "section": "Seção A – Perfil funcional e sociodemográfico", "type": "Múltipla escolha", "question": "Faixa etária", "options": "Até 29 anos | 30 a 39 anos | 40 a 49 anos | 50 anos ou mais", "dimension": "Perfil funcional e sociodemográfico"}, {"id": "Q03", "section": "Seção A – Perfil funcional e sociodemográfico", "type": "Múltipla escolha", "question": "Escolaridade", "options": "Ensino Médio | Ensino Superior Incompleto | Ensino Superior Completo | Especialização | Mestrado | Doutorado | Pós-Doutorado", "dimension": "Perfil funcional e sociodemográfico"}, {"id": "Q04", "section": "Seção A – Perfil funcional e sociodemográfico", "type": "Múltipla escolha", "question": "Área de atuação na organização", "options": "Área finalística | Área administrativa | Gestão/Assessoramento | Tecnologia da Informação | Outra", "dimension": "Perfil funcional e sociodemográfico"}, {"id": "Q05", "section": "Seção A – Perfil funcional e sociodemográfico", "type": "Múltipla escolha", "question": "Nível de atuação na organização", "options": "Operacional | Técnico | Supervisão/Coordenação | Gerencial | Alta Administração", "dimension": "Perfil funcional e sociodemográfico"}, {"id": "Q06", "section": "Seção A – Perfil funcional e sociodemográfico", "type": "Múltipla escolha", "question": "Tempo de atuação na organização", "options": "Até 1 ano | 2 a 5 anos | 6 a 10 anos | 11 a 15 anos | 16 a 20 anos | Acima de 20 anos", "dimension": "Perfil funcional e sociodemográfico"}, {"id": "Q07", "section": "Seção A – Perfil funcional e sociodemográfico", "type": "Múltipla escolha", "question": "Tempo de serviço público", "options": "Até 1 ano | 2 a 5 anos | 6 a 10 anos | 11 a 15 anos | 16 a 20 anos | Acima de 20 anos", "dimension": "Perfil funcional e sociodemográfico"}, {"id": "Q08", "section": "Seção A – Perfil funcional e sociodemográfico", "type": "Múltipla escolha", "question": "Possui função de gestão?", "options": "Não | Sim", "dimension": "Perfil funcional e sociodemográfico"}, {"id": "Q09", "section": "Seção B – Competências transversais", "type": "Escala Likert 1–5", "question": "Comunico informações de forma clara, objetiva e adequada ao contexto organizacional.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Comunicação"}, {"id": "Q10", "section": "Seção B – Competências transversais", "type": "Escala Likert 1–5", "question": "Coopero com colegas e outras unidades para alcançar objetivos institucionais.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Trabalho em equipe"}, {"id": "Q11", "section": "Seção B – Competências transversais", "type": "Escala Likert 1–5", "question": "Cumpro prazos e entregas com responsabilidade e comprometimento.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Comprometimento"}, {"id": "Q12", "section": "Seção B – Competências transversais", "type": "Escala Likert 1–5", "question": "Atuo de forma ética, respeitando normas, regulamentos e o interesse público.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Ética pública"}, {"id": "Q13", "section": "Seção B – Competências transversais", "type": "Escala Likert 1–5", "question": "Possuo os conhecimentos necessários para executar minhas atividades com qualidade.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Conhecimento técnico"}, {"id": "Q14", "section": "Seção B – Competências transversais", "type": "Escala Likert 1–5", "question": "Utilizo adequadamente os sistemas e tecnologias necessários ao meu trabalho.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Ferramentas de trabalho"}, {"id": "Q15", "section": "Seção B – Competências transversais", "type": "Escala Likert 1–5", "question": "Busco constantemente atualizar meus conhecimentos e desenvolver novas competências.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Aprendizagem contínua"}, {"id": "Q16", "section": "Seção B – Competências transversais", "type": "Escala Likert 1–5", "question": "Consigo adaptar-me a mudanças de processos, tecnologias e demandas organizacionais.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Adaptabilidade"}, {"id": "Q17", "section": "Seção B – Competências transversais", "type": "Escala Likert 1–5", "question": "Procuro propor melhorias e soluções inovadoras para os desafios do trabalho.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Inovação"}, {"id": "Q18", "section": "Seção B – Competências transversais", "type": "Escala Likert 1–5", "question": "Desenvolvo minhas atividades com foco no alcance dos resultados institucionais.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Orientação para resultados"}, {"id": "Q19", "section": "Seção C – Alinhamento institucional e gestão por competências", "type": "Escala Likert 1–5", "question": "As competências necessárias para o desempenho das atividades são claramente definidas pela organização.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Alinhamento institucional"}, {"id": "Q20", "section": "Seção C – Alinhamento institucional e gestão por competências", "type": "Escala Likert 1–5", "question": "As capacitações ofertadas pela organização contribuem para o desenvolvimento das competências necessárias ao trabalho.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Capacitação e desenvolvimento"}, {"id": "Q21", "section": "Seção C – Alinhamento institucional e gestão por competências", "type": "Escala Likert 1–5", "question": "A organização identifica adequadamente as competências necessárias para o alcance de seus objetivos.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Mapeamento de competências"}, {"id": "Q22", "section": "Seção C – Alinhamento institucional e gestão por competências", "type": "Escala Likert 1–5", "question": "A gestão de pessoas considera competências profissionais em ações de capacitação e desenvolvimento.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Gestão de pessoas por competências"}, {"id": "Q23", "section": "Seção C – Alinhamento institucional e gestão por competências", "type": "Escala Likert 1–5", "question": "Percebo lacunas de competências na minha unidade de trabalho que impactam o desempenho das atividades.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Lacunas de competências"}, {"id": "Q24", "section": "Seção C – Alinhamento institucional e gestão por competências", "type": "Escala Likert 1–5", "question": "Os gestores incentivam o desenvolvimento contínuo dos servidores.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Desenvolvimento contínuo"}, {"id": "Q25", "section": "Seção C – Alinhamento institucional e gestão por competências", "type": "Escala Likert 1–5", "question": "Uma matriz de competências pode contribuir para melhorar o desempenho profissional e a qualidade dos serviços prestados.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Matriz de competências"}, {"id": "Q26", "section": "Seção C – Alinhamento institucional e gestão por competências", "type": "Escala Likert 1–5", "question": "A implementação de uma gestão por competências pode contribuir para a modernização da Administração Pública.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Modernização da Administração Pública"}, {"id": "Q27", "section": "Seção D – Competências gerenciais", "type": "Escala Likert 1–5", "question": "Planejo adequadamente as atividades e prioridades da equipe.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Planejamento gerencial"}, {"id": "Q28", "section": "Seção D – Competências gerenciais", "type": "Escala Likert 1–5", "question": "Distribuo tarefas de forma adequada às competências dos integrantes da equipe.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Delegação e alocação de pessoas"}, {"id": "Q29", "section": "Seção D – Competências gerenciais", "type": "Escala Likert 1–5", "question": "Acompanho o desempenho da equipe e forneço feedback quando necessário.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Acompanhamento e feedback"}, {"id": "Q30", "section": "Seção D – Competências gerenciais", "type": "Escala Likert 1–5", "question": "Promovo um ambiente colaborativo e de respeito entre os membros da equipe.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Liderança e clima de equipe"}, {"id": "Q31", "section": "Seção D – Competências gerenciais", "type": "Escala Likert 1–5", "question": "Tomo decisões de forma tempestiva e baseada em informações relevantes.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Tomada de decisão"}, {"id": "Q32", "section": "Seção D – Competências gerenciais", "type": "Escala Likert 1–5", "question": "Conduzo mudanças organizacionais de forma eficaz.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Gestão da mudança"}, {"id": "Q33", "section": "Seção D – Competências gerenciais", "type": "Escala Likert 1–5", "question": "Estimulo o desenvolvimento profissional dos membros da equipe.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Desenvolvimento de pessoas"}, {"id": "Q34", "section": "Seção D – Competências gerenciais", "type": "Escala Likert 1–5", "question": "Gerencio conflitos de forma equilibrada e construtiva.", "options": "1=Discordo totalmente | 5=Concordo totalmente", "dimension": "Gestão de conflitos"}, {"id": "Q35", "section": "Seção E – Percepções e sugestões", "type": "Resposta aberta", "question": "Quais conhecimentos, competências ou habilidades você considera mais importantes para melhorar seu desempenho profissional?", "options": "Resposta aberta", "dimension": "Percepções qualitativas"}, {"id": "Q36", "section": "Seção E – Percepções e sugestões", "type": "Resposta aberta", "question": "Quais cursos, treinamentos ou ações de desenvolvimento seriam mais importantes para sua atuação?", "options": "Resposta aberta", "dimension": "Necessidades de desenvolvimento"}, {"id": "Q37", "section": "Seção E – Percepções e sugestões", "type": "Resposta aberta", "question": "Quais recursos, ferramentas ou tecnologias poderiam contribuir para melhorar os resultados do seu trabalho?", "options": "Resposta aberta", "dimension": "Recursos e tecnologias"}, {"id": "Q38", "section": "Seção E – Percepções e sugestões", "type": "Resposta aberta", "question": "Quais são os principais obstáculos ou desafios enfrentados em sua unidade de trabalho?", "options": "Resposta aberta", "dimension": "Obstáculos e desafios"}, {"id": "Q39", "section": "Seção E – Percepções e sugestões", "type": "Resposta aberta", "question": "Que sugestões você apresentaria para melhorar a gestão de pessoas e o desenvolvimento de competências na organização?", "options": "Resposta aberta", "dimension": "Sugestões gerais"}];
+const CRITERIA = ["Clareza de linguagem","Pertinência prática","Relevância","Representatividade"];
+const STORAGE_KEY = "validacao_idcgt_ap_39_respostas_v1";
+const DRAFT_KEY = "validacao_idcgt_ap_39_rascunho_v1";
+function escapeHtml(v) { return String(v ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
+function slug(s){return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]/g,'_').toLowerCase()}
+function showTab(tab,e) { document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); if(e) e.target.classList.add('active'); ['form','panel','data','help'].forEach(t=>document.getElementById(t+'-section').classList.add('hidden')); document.getElementById(tab+'-section').classList.remove('hidden'); refreshTables(); }
+function renderItems() {
+  const box = document.getElementById("items");
+  let current = "";
+  box.innerHTML = ITEMS.map(item => {
+    const sec = item.section !== current ? `<h3>${escapeHtml(item.section)}</h3>` : "";
+    current = item.section;
+    return `${sec}<div class="item-card">
+      <div class="item-head"><span class="badge">${item.id}</span>
+        <h3>${escapeHtml(item.question)}</h3>
+        <p class="small"><strong>Dimensão:</strong> ${escapeHtml(item.dimension)}<br><strong>Tipo:</strong> ${escapeHtml(item.type)}<br><strong>Opções/âncoras:</strong> ${escapeHtml(item.options)}</p>
+      </div>
+      <div class="criteria">
+        ${CRITERIA.map(c => `<div><label>${c} <span class="required">*</span></label><div class="scale">${[1,2,3,4,5].map(n => `<label><input type="radio" name="${item.id}_${slug(c)}" value="${n}"> ${n}</label>`).join('')}</div></div>`).join('')}
+      </div>
+      <div style="margin-top:12px"><label>Sugestão de melhoria/comentário sobre o item</label><textarea id="${item.id}_comentario" placeholder="Campo opcional"></textarea></div>
+    </div>`;
+  }).join('');
+}
+function getResponses(){return JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]")}
+function setResponses(data){localStorage.setItem(STORAGE_KEY, JSON.stringify(data))}
+function getVal(id){return document.getElementById(id)?.value || ""}
+function getRadio(name){return document.querySelector(`input[name="${name}"]:checked`)?.value || ""}
+function collectForm() {
+  if(!document.getElementById("consent").checked) throw new Error("É necessário marcar o consentimento.");
+  for (const id of ["formacao","areaFormacao","areaAtuacao"]) if(!getVal(id).trim()) throw new Error("Preencha os campos obrigatórios de identificação do especialista.");
+  const scores = {}, comments = {};
+  for (const item of ITEMS) {
+    scores[item.id] = {};
+    for (const c of CRITERIA) {
+      const val = getRadio(`${item.id}_${slug(c)}`);
+      if(!val) throw new Error(`Preencha o critério "${c}" do item ${item.id}.`);
+      scores[item.id][c] = Number(val);
+    }
+    comments[item.id] = getVal(`${item.id}_comentario`);
+  }
+  return {
+    id: "ESP-" + String(Date.now()).slice(-8),
+    timestamp: new Date().toLocaleString("pt-BR"),
+    specialist: {nome:getVal("nome"), email:getVal("email"), formacao:getVal("formacao"), areaFormacao:getVal("areaFormacao"), areaAtuacao:getVal("areaAtuacao"), expProf:getVal("expProf"), expGestao:getVal("expGestao"), expCompetencias:getVal("expCompetencias"), expValidacao:getVal("expValidacao"), conhecimento:getVal("conhecimento"), capacidade:getVal("capacidade")},
+    scores, comments,
+    global: {representa:getVal("globalRepresenta"), excluir:getVal("globalExcluir"), temas:getVal("globalTemas"), sugestoes:getVal("globalSugestoes")}
+  };
+}
+function submitResponse() { try { const data = collectForm(); const all = getResponses(); all.push(data); setResponses(all); localStorage.removeItem(DRAFT_KEY); alert("Resposta enviada, salva e tabulada com sucesso!"); resetForm(false); refreshTables(); showTab('panel'); } catch(e) { alert(e.message); } }
+function saveDraft() { const fields = {}; document.querySelectorAll("input,select,textarea").forEach(el => { if(el.type === "radio") fields[el.name] = getRadio(el.name); else if(el.type === "checkbox") fields[el.id] = el.checked; else fields[el.id] = el.value; }); localStorage.setItem(DRAFT_KEY, JSON.stringify(fields)); alert("Rascunho salvo neste navegador."); }
+function loadDraft() { const fields = JSON.parse(localStorage.getItem(DRAFT_KEY)||"null"); if(!fields) return alert("Nenhum rascunho encontrado."); Object.entries(fields).forEach(([k,v]) => { const el = document.getElementById(k); if(el) { if(el.type === "checkbox") el.checked = !!v; else el.value = v; } else { const radio = document.querySelector(`input[name="${k}"][value="${v}"]`); if(radio) radio.checked = true; } }); }
+function resetForm(confirmIt=true) { if(confirmIt && !confirm("Deseja limpar o formulário?")) return; document.querySelectorAll("input,textarea").forEach(el=>{ if(el.type==="radio"||el.type==="checkbox") el.checked=false; else el.value=""; }); document.querySelectorAll("select").forEach(el=>el.selectedIndex=0); }
+function calculateSummary() {
+  const res = getResponses();
+  return ITEMS.map(item => {
+    const criterionRows = CRITERIA.map(c => {
+      const vals = res.map(r => r.scores?.[item.id]?.[c]).filter(v => Number.isFinite(v));
+      const n = vals.length, avg = n ? vals.reduce((a,b)=>a+b,0)/n : 0, cvci = avg/5, erro = n ? 1/Math.pow(n, n) : 0, cvcf = Math.max(0, cvci - erro), consenso = n ? vals.filter(v=>v>=4).length/n : 0;
+      return {criterion:c,n,avg,cvci,erro,cvcf,consenso};
+    });
+    const valid = criterionRows.filter(r=>r.n>0);
+    const mediaCVC = valid.length ? valid.reduce((a,b)=>a+b.cvcf,0)/valid.length : 0;
+    const mediaConsenso = valid.length ? valid.reduce((a,b)=>a+b.consenso,0)/valid.length : 0;
+    let status = "Sem dados"; if(valid.length) status = mediaCVC >= .80 ? "Manter" : mediaCVC >= .70 ? "Revisar" : "Excluir/Reformular";
+    return {...item, mediaCVC, mediaConsenso, status, criterionRows};
+  });
+}
+function refreshTables() {
+  const res = getResponses(), summary = calculateSummary();
+  document.getElementById("kJudges").textContent = res.length;
+  document.getElementById("kManter").textContent = summary.filter(x=>x.status==="Manter").length;
+  document.getElementById("kRevisar").textContent = summary.filter(x=>x.status==="Revisar").length;
+  document.getElementById("kExcluir").textContent = summary.filter(x=>x.status==="Excluir/Reformular").length;
+  document.getElementById("summaryTable").innerHTML = `<tr><th>Item</th><th>Seção</th><th>Dimensão</th><th>Pergunta</th><th>CVC médio</th><th>Consenso médio</th><th>Decisão</th><th>Comentários</th></tr>` +
+    summary.map(s => { const cls = s.status==="Manter"?"manter":s.status==="Revisar"?"revisar":s.status==="Excluir/Reformular"?"excluir":""; const comments = res.map(r => r.comments?.[s.id]).filter(Boolean).join(" | "); return `<tr><td>${s.id}</td><td>${escapeHtml(s.section)}</td><td>${escapeHtml(s.dimension)}</td><td>${escapeHtml(s.question)}</td><td>${s.mediaCVC ? s.mediaCVC.toFixed(3) : "-"}</td><td>${s.mediaConsenso ? (s.mediaConsenso*100).toFixed(1)+"%" : "-"}</td><td><span class="status ${cls}">${s.status}</span></td><td>${escapeHtml(comments)}</td></tr>`; }).join("");
+  document.getElementById("responsesTable").innerHTML = `<tr><th>ID</th><th>Data/Hora</th><th>Nome</th><th>E-mail</th><th>Formação</th><th>Área</th><th>Avaliação global</th></tr>` +
+    res.map(r => `<tr><td>${r.id}</td><td>${r.timestamp}</td><td>${escapeHtml(r.specialist.nome)}</td><td>${escapeHtml(r.specialist.email)}</td><td>${escapeHtml(r.specialist.formacao)}</td><td>${escapeHtml(r.specialist.areaAtuacao)}</td><td>${escapeHtml(r.global.representa)}</td></tr>`).join("");
+}
+function csvEscape(v){return '"' + String(v ?? '').replace(/"/g,'""') + '"'}
+function download(filename, content, type="text/csv;charset=utf-8;") { const blob = new Blob([content], {type}); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href=url; a.download=filename; a.click(); URL.revokeObjectURL(url); }
+function exportSummaryCSV() { const rows = [["Item_ID","Seção","Dimensão","Pergunta","Média CVC","Média consenso","Status final","Comentários"]], res = getResponses(); calculateSummary().forEach(s => rows.push([s.id,s.section,s.dimension,s.question,s.mediaCVC.toFixed(4),(s.mediaConsenso*100).toFixed(2)+"%",s.status,res.map(r=>r.comments?.[s.id]).filter(Boolean).join(" | ")])); download("resumo_final_cvc_idcgt_ap_39_itens.csv", rows.map(r=>r.map(csvEscape).join(";")).join("\n")); }
+function exportResponsesCSV() { const rows = []; const head = ["ID","DataHora","Nome","Email","Formacao","AreaFormacao","AreaAtuacao","ExpProf","ExpGestao","ExpCompetencias","ExpValidacao","Conhecimento","Capacidade"]; ITEMS.forEach(i=>CRITERIA.forEach(c=>head.push(`${i.id}_${c}`))); ITEMS.forEach(i=>head.push(`${i.id}_Comentario`)); head.push("GlobalRepresenta","GlobalExcluir","GlobalTemas","GlobalSugestoes"); rows.push(head); getResponses().forEach(r => { const line = [r.id,r.timestamp,r.specialist.nome,r.specialist.email,r.specialist.formacao,r.specialist.areaFormacao,r.specialist.areaAtuacao,r.specialist.expProf,r.specialist.expGestao,r.specialist.expCompetencias,r.specialist.expValidacao,r.specialist.conhecimento,r.specialist.capacidade]; ITEMS.forEach(i=>CRITERIA.forEach(c=>line.push(r.scores?.[i.id]?.[c] ?? ""))); ITEMS.forEach(i=>line.push(r.comments?.[i.id] ?? "")); line.push(r.global.representa,r.global.excluir,r.global.temas,r.global.sugestoes); rows.push(line); }); download("respostas_completas_validacao_idcgt_ap_39_itens.csv", rows.map(r=>r.map(csvEscape).join(";")).join("\n")); }
+function exportJSON(){ download("backup_validacao_idcgt_ap_39_itens.json", JSON.stringify(getResponses(),null,2), "application/json;charset=utf-8;") }
+function importJSON(event) { const file = event.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = () => { try { const data = JSON.parse(reader.result); if(!Array.isArray(data)) throw new Error("Formato inválido."); setResponses(data); refreshTables(); alert("Backup importado com sucesso."); } catch(e) { alert("Não foi possível importar: " + e.message); } }; reader.readAsText(file); }
+function clearAll() { if(confirm("Tem certeza que deseja apagar todas as respostas salvas neste navegador?")) { localStorage.removeItem(STORAGE_KEY); refreshTables(); } }
+renderItems(); refreshTables();
+</script>
+</body>
+</html>
